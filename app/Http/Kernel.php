@@ -2,6 +2,9 @@
 
 namespace App\Http;
 
+use Illuminate\Auth\Events\Authenticated;
+use Illuminate\Auth\Middleware\Authenticate;
+use Illuminate\Auth\Middleware\RedirectIfAuthenticated;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -10,7 +13,7 @@ class Kernel extends HttpKernel
      * Global HTTP middleware — runs on every request.
      */
     protected $middleware = [
-        // Force HTTPS in production (also enforced at Nginx/Cloudflare level)
+        // Force HTTPS in production 
         \App\Http\Middleware\ForceHttps::class,
 
         // Standard Laravel middleware
@@ -21,7 +24,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
 
-        // Security headers on all responses (XSS, clickjacking, HSTS, CSP)
+        // Security headers on all responses 
         \App\Http\Middleware\SecurityHeaders::class,
     ];
 
@@ -51,16 +54,12 @@ class Kernel extends HttpKernel
      * Named route middleware.
      */
     protected $middlewareAliases = [
-        'auth'             => \App\Http\Middleware\Authenticate::class,
+        'auth'             => Authenticate::class,
         'auth.basic'       => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'cache.headers'    => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'can'              => \Illuminate\Auth\Middleware\Authorize::class,
-        'guest'            => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'guest'            => RedirectIfAuthenticated::class,
         'throttle'         => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified'         => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-
-        // Custom security middleware
-        'role'             => \App\Http\Middleware\CheckRole::class,
-        'session.validate' => \App\Http\Middleware\ValidateSession::class,
     ];
 }

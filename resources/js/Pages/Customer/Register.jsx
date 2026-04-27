@@ -2,11 +2,11 @@
 
 import React, { useState } from 'react';
 import { useForm, Link } from '@inertiajs/react';
-import AuthLayout from '@/Layouts/AuthLayout';
+import AuthLayout from '@/Components/AuthLayout';
 import FormField from '@/Components/FormField';
 import Alert from '@/Components/Alert';
 
-// ── Client-side RegEx mirrors (match server-side Laravel rules exactly) ──────
+//Client-side RegEx mirrors (match server-side Laravel rules exactly)
 const PATTERNS = {
     full_name:      /^[A-Za-z\s\-']{2,80}$/,
     id_number:      /^\d{13}$/,

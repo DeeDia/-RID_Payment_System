@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// ── Public routes ────────────────────────────────────────────────────────
+// ── Public routes  ──────
 Route::get('/', fn () => redirect()->route('login'));
 
 // Customer auth
@@ -25,7 +25,7 @@ Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware('auth')
     ->name('logout');
 
-// ── Customer portal (authenticated customers only) ───────────────────────
+//  Customer portal (authenticated customers only) 
 Route::middleware(['auth', 'role:customer', 'session.validate'])->group(function () {
     Route::get('/dashboard',       [PaymentController::class, 'dashboard'])->name('customer.dashboard');
     Route::get('/payment',         [PaymentController::class, 'showPayment'])->name('customer.payment');
@@ -33,7 +33,7 @@ Route::middleware(['auth', 'role:customer', 'session.validate'])->group(function
     Route::get('/payment/success', [PaymentController::class, 'paymentSuccess'])->name('customer.payment.success');
 });
 
-// ── Employee portal (authenticated employees only) ───────────────────────
+//  Employee portal (authenticated employees only) 
 Route::middleware(['auth', 'role:employee', 'session.validate'])->group(function () {
     Route::get('/employee/dashboard',            [EmployeeController::class, 'dashboard'])->name('employee.dashboard');
     Route::post('/employee/transactions/{id}/verify', [EmployeeController::class, 'verify'])->name('employee.verify');

@@ -14,7 +14,7 @@ class Transaction extends Model
         'beneficiary_account',
         'beneficiary_name',
         'swift_code',
-        'status',        // pending | verified | submitted_to_swift
+        'status',
         'verified_by',
         'verified_at',
     ];

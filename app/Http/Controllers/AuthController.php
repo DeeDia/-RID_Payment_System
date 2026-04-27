@@ -31,13 +31,13 @@ class AuthController extends Controller
 
         // Strict server-side input whitelisting via RegEx
         $request->validate([
-            // Full name: letters, spaces, hyphens, apostrophes only
+
             'full_name'      => ['required', 'regex:/^[A-Za-z\s\-\']{2,80}$/'],
-            // SA ID number: exactly 13 digits
+
             'id_number'      => ['required', 'regex:/^\d{13}$/', 'unique:users,id_number'],
-            // Account number: 6-16 digits
+
             'account_number' => ['required', 'regex:/^\d{6,16}$/', 'unique:users,account_number'],
-            // Password: 8–72 chars, must include upper, lower, digit, special char
+
             'password'       => [
                 'required',
                 'confirmed',
@@ -52,18 +52,18 @@ class AuthController extends Controller
             'password.regex'       => 'Password must include uppercase, lowercase, number and special character.',
         ]);
 
-        // bcrypt hashing with work factor 12 (Laravel default uses bcrypt via Hash::make)
-        // The salt is automatically generated and embedded in the hash by bcrypt
-        User::create([
+
+        $user = User::create([
             'full_name'      => $request->full_name,
             'id_number'      => $request->id_number,
             'account_number' => $request->account_number,
-            // bcrypt with cost factor 12 — plain-text password never persisted
             'password'       => Hash::make($request->password, ['rounds' => 12]),
             'role'           => 'customer',
         ]);
 
-        return redirect()->route('login')->with('success', 'Registration successful. Please log in.');
+        Auth::login($user);
+
+        return redirect()->route('customer.dashboard');
     }
 
     // Customer Login 
@@ -105,7 +105,7 @@ class AuthController extends Controller
 
         RateLimiter::hit($key, 60);
 
-        // Deliberately vague error — don't reveal which field was wrong
+        
         return back()->withErrors(['credentials' => 'Invalid account number or password.']);
     }
 
@@ -143,7 +143,7 @@ class AuthController extends Controller
         return back()->withErrors(['credentials' => 'Invalid employee ID or password.']);
     }
 
-    // ── Logout ───────────────────────────────────────────────────────────
+    //LogoutPage
 
     public function logout(Request $request)
     {

@@ -20,8 +20,10 @@
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 
     {{-- Vite assets (JS + CSS) --}}
+    
     @viteReactRefresh
-    @vite(['resources/js/app.jsx', 'resources/css/app.css'])
+    @vite('resources/js/app.jsx')
+    
 
     {{-- Inertia head --}}
     @inertiaHead

@@ -16,22 +16,22 @@ class User extends Authenticatable
         'account_number',
         'employee_id',
         'password',
-        'role',          // 'customer' | 'employee'
+        'role',
     ];
 
     protected $hidden = [
-        'password',      // Never expose bcrypt hash in JSON responses
+        'password',
         'remember_token',
-        'id_number',     // Sensitive PII — hidden from serialisation
+        'id_number',
     ];
 
     protected $casts = [
         'password' => 'hashed',
     ];
 
-    // Customers can have many transactions
     public function transactions()
     {
         return $this->hasMany(Transaction::class, 'customer_id');
     }
 }
+

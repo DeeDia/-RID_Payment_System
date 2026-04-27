@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { router } from '@inertiajs/react';
-import PortalLayout from '@/Layouts/PortalLayout';
+import PortalLayout from '@/Components/PortalLayout';
 import Alert from '@/Components/Alert';
 
 const STATUS_STYLES = {

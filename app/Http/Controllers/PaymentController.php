@@ -38,9 +38,8 @@ class PaymentController extends Controller
 
     public function submitPayment(Request $request)
     {
-        // ── Server-side input whitelisting (RegEx) ────────────────────────
+ 
         $request->validate([
-            // Amount: positive decimal up to 2 decimal places, max 10 digits
             'amount'           => ['required', 'regex:/^\d{1,10}(\.\d{1,2})?$/', 'numeric', 'min:0.01', 'max:9999999.99'],
             // Currency: exactly one of the allowed ISO 4217 codes
             'currency'         => ['required', 'in:' . implode(',', self::CURRENCIES)],
@@ -67,7 +66,6 @@ class PaymentController extends Controller
             'provider'            => $request->provider,
             'beneficiary_account' => strtoupper($request->beneficiary_account),
             'beneficiary_name'    => $request->beneficiary_name,
-            // HTML-stripped and stored; output encoding applied on render
             'swift_code'          => strtoupper(strip_tags($request->swift_code)),
             'status'              => 'pending',
         ]);

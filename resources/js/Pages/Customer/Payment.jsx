@@ -2,11 +2,11 @@
 
 import React, { useState } from 'react';
 import { useForm } from '@inertiajs/react';
-import PortalLayout from '@/Layouts/PortalLayout';
+import PortalLayout from '@/Components/PortalLayout';
 import FormField from '@/Components/FormField';
 import Alert from '@/Components/Alert';
 
-// ── Client-side RegEx mirrors (ISO 9362 SWIFT/BIC) ───────────────────────────
+//Client-side RegEx mirrors (ISO 9362 SWIFT/BIC) 
 const SWIFT_REGEX      = /^[A-Z]{4}[A-Z]{2}[A-Z0-9]{2}([A-Z0-9]{3})?$/;
 const BENE_ACCT_REGEX  = /^[A-Z0-9]{4,34}$/;
 const BENE_NAME_REGEX  = /^[A-Za-z\s\-'.]{2,100}$/;

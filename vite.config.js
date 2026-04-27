@@ -1,15 +1,22 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import react from '@vitejs/plugin-react';
+import inertia from '@inertiajs/vite'
 
 export default defineConfig({
+
+    server: {
+        host: '127.0.0.1', // force IPv4
+        port: 5173,
+    },
+    
     plugins: [
         laravel({
             // Entry points — CSS is imported inside app.jsx, not listed separately
-            input: ['resources/js/app.js'],
+            input: ['resources/js/app.jsx'],
             refresh: true,
         }),
-        react(),
+        inertia(),
     ],
 
     resolve: {
@@ -19,17 +26,25 @@ export default defineConfig({
         },
     },
 
-    build: {
-        // Raise warning threshold (banking portal has more code than a simple site)
-        chunkSizeWarningLimit: 600,
-        rollupOptions: {
-            output: {
-                // Split vendor code for better caching
-                manualChunks: {
-                    react:   ['react', 'react-dom'],
-                    inertia: ['@inertiajs/react'],
-                },
-            },
-        },
-    },
+//     build: {
+//     chunkSizeWarningLimit: 600,
+//     rollupOptions: {
+//         output: {
+//             manualChunks(id) {
+//                 if (id.includes('node_modules')) {
+
+//                     if (id.includes('react')) {
+//                         return 'react';
+//                     }
+
+//                     if (id.includes('@inertiajs')) {
+//                         return 'inertia';
+//                     }
+
+//                     return 'vendor';
+//                 }
+//             },
+//         },
+//     },
+// },
 });

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Link } from '@inertiajs/react';
-import PortalLayout from '@/Layouts/PortalLayout';
+import PortalLayout from '@/Components/PortalLayout';
 
 export default function PaymentSuccess({ user }) {
     return (

@@ -34,7 +34,7 @@ class ValidateSession
                     ->withErrors(['session' => 'Your session has been invalidated due to a security check. Please log in again.']);
             }
 
-            // Enforce inactivity timeout (30 min for customers, 15 min for employees)
+            // Enforce inactivity timeout
             $timeoutMinutes = Auth::user()->role === 'employee' ? 15 : 30;
             $lastActivity   = $request->session()->get('last_activity', now()->timestamp);
 

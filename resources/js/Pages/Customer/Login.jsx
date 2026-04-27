@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useForm, Link } from '@inertiajs/react';
-import AuthLayout from '@/Layouts/AuthLayout';
+import AuthLayout from '@/Components/AuthLayout';
 import FormField from '@/Components/FormField';
 import Alert from '@/Components/Alert';
 

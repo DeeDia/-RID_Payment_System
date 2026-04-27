@@ -13,10 +13,14 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->web(append: [
-        HandleInertiaRequests::class,
-    ]);
+            HandleInertiaRequests::class,
+            // \App\Http\Middleware\CheckRole::class,
+        ]);
+        $middleware->alias([
+            'role' => \App\Http\Middleware\CheckRole::class,
+            'session.validate' => \App\Http\Middleware\ValidateSession::class,
+        ]);
 
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
     })->create();

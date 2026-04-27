@@ -6,12 +6,10 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-/**
- * CheckRole — Role-Based Access Control (RBAC) gate.
- *
- * Ensures customers cannot reach employee routes and vice versa.
- * Employees are never self-registered; their accounts are seeded at onboarding.
- */
+// CheckRole — Role-Based Access Control (RBAC) gate.
+//Ensures customers cannot reach employee routes and vice versa.
+//Employees are never self-registered; their accounts are seeded at onboarding.
+ 
 class CheckRole
 {
     public function handle(Request $request, Closure $next, string $role)
