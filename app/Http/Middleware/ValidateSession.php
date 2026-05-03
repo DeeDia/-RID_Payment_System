@@ -24,7 +24,7 @@ class ValidateSession
             $currentIp = $request->ip();
             $currentUa = $request->userAgent();
 
-            if ($boundIp !== $currentIp || $boundUa !== $currentUa) {
+            if ($this->ipMatches($boundIp, $currentIp) || $boundUa !== $currentUa) {
                 // Session binding violation — force logout
                 Auth::logout();
                 $request->session()->invalidate();
@@ -52,5 +52,9 @@ class ValidateSession
         }
 
         return $next($request);
+    }
+
+    private function ipMatches($bound, $current) {
+        return substr($bound, 0, 7) === substr($current, 0, 7);
     }
 }
