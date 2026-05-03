@@ -18,34 +18,37 @@ class ValidateSession
     public function handle(Request $request, Closure $next)
     {
         if (Auth::check()) {
-            $boundIp = $request->session()->get('bound_ip');
-            $boundUa = $request->session()->get('bound_ua');
-
             $currentIp = $request->ip();
             $currentUa = $request->userAgent();
 
-            if ($this->ipMatches($boundIp, $currentIp) || $boundUa !== $currentUa) {
-                // Session binding violation — force logout
-                Auth::logout();
-                $request->session()->invalidate();
-                $request->session()->regenerateToken();
+            $boundIp = $request->session()->get('bound_ip');
+            $boundUa = $request->session()->get('bound_ua');
 
-                return redirect()->route('login')
-                    ->withErrors(['session' => 'Your session has been invalidated due to a security check. Please log in again.']);
+            // ✅ If session not yet bound, bind it (prevents false logout)
+            if (!$boundIp || !$boundUa) {
+                $request->session()->put('bound_ip', $currentIp);
+                $request->session()->put('bound_ua', $currentUa);
+            } else {
+                // ✅ Primary check: User-Agent mismatch
+                if ($boundUa !== $currentUa) {
+                    return $this->logout($request, 'Your session changed (device/browser mismatch). Please log in again.');
+                }
+
+                // ✅ Optional: Soft IP check (don’t be strict)
+                if (!$this->ipRoughlyMatches($boundIp, $currentIp)) {
+                    // Instead of logging out, just update IP
+                    $request->session()->put('bound_ip', $currentIp);
+                }
             }
 
-            // Enforce inactivity timeout
-            $timeoutMinutes = Auth::user()->role === 'employee' ? 15 : 30;
-            $lastActivity   = $request->session()->get('last_activity', now()->timestamp);
+            // ✅ Inactivity timeout
+            $user = Auth::user();
+            $timeoutMinutes = $user->role === 'employee' ? 15 : 30;
+
+            $lastActivity = $request->session()->get('last_activity', now()->timestamp);
 
             if (now()->timestamp - $lastActivity > $timeoutMinutes * 60) {
-                Auth::logout();
-                $request->session()->invalidate();
-                $request->session()->regenerateToken();
-
-                $route = Auth::user()?->role === 'employee' ? 'employee.login' : 'login';
-                return redirect()->route($route)
-                    ->withErrors(['session' => 'Your session has expired due to inactivity. Please log in again.']);
+                return $this->logout($request, 'Your session has expired due to inactivity.');
             }
 
             $request->session()->put('last_activity', now()->timestamp);
@@ -54,7 +57,40 @@ class ValidateSession
         return $next($request);
     }
 
-    private function ipMatches($bound, $current) {
-        return substr($bound, 0, 7) === substr($current, 0, 7);
+    private function logout(Request $request, string $message)
+    {
+        $role = Auth::user()?->role;
+
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        $route = $role === 'employee' ? 'employee.login' : 'login';
+
+        return redirect()->route($route)
+            ->withErrors(['session' => $message]);
+    }
+
+    /**
+     * Soft IP comparison:
+     * Matches first 2 octets for IPv4 (e.g. 192.168.*.*)
+     * Falls back to strict compare for unknown formats
+     */
+    private function ipRoughlyMatches($bound, $current)
+    {
+        if (!$bound || !$current) return true;
+
+        // IPv4 check
+        if (filter_var($bound, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) &&
+            filter_var($current, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+
+            $b = explode('.', $bound);
+            $c = explode('.', $current);
+
+            return $b[0] === $c[0] && $b[1] === $c[1];
+        }
+
+        // IPv6 or unknown → don’t enforce
+        return true;
     }
 }
