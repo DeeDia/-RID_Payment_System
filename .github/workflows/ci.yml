@@ -25,13 +25,21 @@ jobs:
         run: composer install --no-dev --optimize-autoloader
 
       - name: Copy .env
-        run: cp .env.example .env
+        run: |
+          cp .env.example .env
+          echo "DB_CONNECTION=sqlite" >> .env
+          echo "DB_DATABASE=$(pwd)/database/database.sqlite" >> .env
 
       - name: Generate app key
         run: php artisan key:generate
 
       - name: Create SQLite database
-        run: touch database/database.sqlite
+        run: |
+          mkdir -p database
+          touch database/database.sqlite
+
+      - name: Set database permissions
+        run: chmod 777 database/database.sqlite
 
       - name: Run migrations and seed
         run: php artisan migrate --seed --force
