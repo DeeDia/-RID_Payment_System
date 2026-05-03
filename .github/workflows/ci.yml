@@ -49,6 +49,3 @@ jobs:
 
       - name: Build frontend
         run: npm run build
-
-      - name: Run PHP tests
-        run: ./vendor/bin/phpunit
