@@ -3,7 +3,9 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\HandleInertiaRequests;
+use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -16,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
             HandleInertiaRequests::class,
             // \App\Http\Middleware\CheckRole::class,
         ]);
+        $middleware->appendToPriorityList(ConvertEmptyStringsToNull::class, SecurityHeaders::class);
         $middleware->alias([
             'role' => \App\Http\Middleware\CheckRole::class,
             'session.validate' => \App\Http\Middleware\ValidateSession::class,
