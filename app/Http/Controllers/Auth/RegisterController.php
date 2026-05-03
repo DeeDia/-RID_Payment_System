@@ -62,6 +62,9 @@ class RegisterController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
+        $request->session()->put('bound_ip', $request->ip());
+        $request->session()->put('bound_ua', $request->userAgent());
+
         return redirect()->route('customer.dashboard');
     }
 }
