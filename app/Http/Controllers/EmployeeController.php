@@ -28,7 +28,7 @@ class EmployeeController extends Controller
      */
     public function verify(Request $request, $id)
     {
-        $transaction = Transaction::where('id', $id)
+        $transaction = Transaction::whereId($id)
             ->where('status', 'pending')
             ->firstOrFail();
 
@@ -57,7 +57,7 @@ class EmployeeController extends Controller
      */
     public function submitToSwift(Request $request)
     {
-        $verified = Transaction::where('status', 'verified')->get();
+        $verified = Transaction::whereStatus('verified')->get();
 
         if ($verified->isEmpty()) {
             return back()->withErrors(['submit' => 'No verified transactions to submit.']);

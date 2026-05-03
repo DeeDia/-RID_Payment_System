@@ -18,16 +18,16 @@ class DatabaseSeeder extends Seeder
     {
         $employees = [
             [
-                'full_name'   => 'Sarah Johnson',
+                'full_name' => 'Sarah Johnson',
                 'employee_id' => 'EMP00001',
-                'password'    => Hash::make('Emp!Secure#2024A', ['rounds' => 12]),
-                'role'        => 'employee',
+                'password' => Hash::make('Emp!Secure#2024A', ['rounds' => 12]),
+                'role' => 'employee',
             ],
             [
-                'full_name'   => 'Michael van der Berg',
+                'full_name' => 'Michael van der Berg',
                 'employee_id' => 'EMP00002',
-                'password'    => Hash::make('Emp!Secure#2024B', ['rounds' => 12]),
-                'role'        => 'employee',
+                'password' => Hash::make('Emp!Secure#2024B', ['rounds' => 12]),
+                'role' => 'employee',
             ],
         ];
 
