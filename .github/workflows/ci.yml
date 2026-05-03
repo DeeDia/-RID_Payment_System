@@ -1,4 +1,4 @@
-name: SecurePay CI Pipeline
+name: NexusPay CI Pipeline
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
           coverage: none
 
       - name: Install Composer dependencies
-        run: composer install --no-dev --optimize-autoloader
+        run: composer install --optimize-autoloader
 
       - name: Copy .env
         run: |
@@ -49,3 +49,6 @@ jobs:
 
       - name: Build frontend
         run: npm run build
+
+      - name: Run PHP tests
+        run: ./vendor/bin/phpunit
