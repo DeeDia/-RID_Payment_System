@@ -52,3 +52,9 @@ jobs:
 
       - name: Run PHP tests
         run: ./vendor/bin/phpunit
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: https://sonarcloud.io
