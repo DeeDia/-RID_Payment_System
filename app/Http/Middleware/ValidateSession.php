@@ -24,24 +24,19 @@ class ValidateSession
             $boundIp = $request->session()->get('bound_ip');
             $boundUa = $request->session()->get('bound_ua');
 
-            // ✅ If session not yet bound, bind it (prevents false logout)
             if (!$boundIp || !$boundUa) {
                 $request->session()->put('bound_ip', $currentIp);
                 $request->session()->put('bound_ua', $currentUa);
             } else {
-                // ✅ Primary check: User-Agent mismatch
                 if ($boundUa !== $currentUa) {
                     return $this->logout($request, 'Your session changed (device/browser mismatch). Please log in again.');
                 }
 
-                // ✅ Optional: Soft IP check (don’t be strict)
                 if (!$this->ipRoughlyMatches($boundIp, $currentIp)) {
-                    // Instead of logging out, just update IP
                     $request->session()->put('bound_ip', $currentIp);
                 }
             }
 
-            // ✅ Inactivity timeout
             $user = Auth::user();
             $timeoutMinutes = $user->role === 'employee' ? 15 : 30;
 
@@ -78,9 +73,11 @@ class ValidateSession
      */
     private function ipRoughlyMatches($bound, $current)
     {
-        if (!$bound || !$current) return true;
+        if (!$bound || !$current) 
+        {
+            return true;
+        }
 
-        // IPv4 check
         if (filter_var($bound, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) &&
             filter_var($current, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
 
@@ -90,7 +87,6 @@ class ValidateSession
             return $b[0] === $c[0] && $b[1] === $c[1];
         }
 
-        // IPv6 or unknown → don’t enforce
         return true;
     }
 }
