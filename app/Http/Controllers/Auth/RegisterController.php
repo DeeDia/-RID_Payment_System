@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Inertia\Inertia;
 
+//For the Clients 
 class RegisterController extends Controller
 {
     public function index()
